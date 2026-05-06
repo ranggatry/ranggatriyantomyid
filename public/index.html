@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rangga Triyanto - System Administrator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖥️</text></svg>">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-terminal: #1e252e;
+            --accent-gray: #8b949e;
+            --accent-light: #c9d1d9;
+            --accent-highlight: #e6edf3;
+            --accent-blue: #58a6ff;
+            --success-green: #3fb950;
+            --prompt-green: #7ee787;
+            --error-red: #f85149;
+            --border-color: #30363d;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--accent-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-gray);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-light);
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 32px;
+            background: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--prompt-green);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-highlight);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--accent-gray);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-highlight);
+        }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--accent-light);
+            transition: all 0.3s ease;
+        }
+
+        .hero {
+            min-height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 32px 20px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(88, 166, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(126, 231, 135, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .terminal {
+            background: var(--bg-terminal);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 
+                0 0 0 1px rgba(255,255,255,0.05),
+                0 20px 50px -10px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.03) 2px,
+                rgba(0,0,0,0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .terminal-header {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-title {
+            margin-left: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-gray);
+        }
+
+        .terminal-body {
+            padding: 24px;
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 300px;
+        }
+
+        .terminal-line {
+            margin-bottom: 8px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .prompt {
+            color: var(--prompt-green);
+            margin-right: 8px;
+        }
+
+        .command {
+            color: var(--accent-highlight);
+        }
+
+        .output {
+            color: var(--accent-gray);
+            padding-left: 16px;
+            margin: 8px 0;
+        }
+
+        .highlight {
+            color: var(--accent-blue);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: var(--prompt-green);
+            margin-left: 4px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .hero-subtitle {
+            color: var(--accent-gray);
+            font-size: 0.9rem;
+            margin-top: 24px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards 2.5s;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        section {
+            padding: 80px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+
+        .section-header::before {
+            content: '//';
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--prompt-green);
+            font-size: 1.25rem;
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.75rem;
+            color: var(--accent-highlight);
+            font-weight: 600;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .skill-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.1);
+        }
+
+        .skill-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .skill-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-terminal);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+        }
+
+        .skill-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--accent-highlight);
+        }
+
+        .skill-level {
+            font-size: 0.75rem;
+            color: var(--accent-gray);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            background: var(--prompt-green);
+            border-radius: 50%;
+            border: 2px solid var(--bg-primary);
+        }
+
+        .timeline-date {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--prompt-green);
+            background: var(--bg-secondary);
+            padding: 4px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .timeline-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .timeline-content h3 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-highlight);
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .timeline-company {
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .timeline-desc {
+            color: var(--accent-gray);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .timeline-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .tech-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-gray);
+            background: var(--bg-terminal);
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .project-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px);
+        }
+
+        .project-header {
+            background: var(--bg-terminal);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .project-folder {
+            color: var(--accent-blue);
+        }
+
+        .project-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-highlight);
+        }
+
+        .project-body {
+            padding: 20px;
+        }
+
+        .project-desc {
+            color: var(--accent-gray);
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .read-more-btn {
+            margin-top: 16px;
+            background: var(--bg-terminal);
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .read-more-btn:hover {
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .contact-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .contact-info h3 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-highlight);
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+        }
+
+        .contact-info p {
+            color: var(--accent-gray);
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--accent-gray);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .contact-link:hover {
+            color: var(--accent-blue);
+        }
+
+        .contact-wa {
+            display: flex;
+            align-items: center;
+        }
+
+        .wa-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #25D366;
+            color: #fff;
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .wa-btn:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3);
+        }
+
+        .wa-btn svg {
+            flex-shrink: 0;
+        }
+
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 32px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-gray);
+        }
+
+        .footer-text span {
+            color: var(--prompt-green);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 32px;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-menu a {
+            display: block;
+            padding: 12px 0;
+            color: var(--accent-gray);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-menu a:hover {
+            color: var(--accent-highlight);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-header {
+            background: var(--bg-terminal);
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+        }
+
+        .modal-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            color: var(--accent-highlight);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--accent-gray);
+            cursor: pointer;
+            font-size: 2rem;
+            line-height: 1;
+            padding: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-highlight);
+        }
+
+        .modal-body {
+            padding: 40px;
+        }
+
+        .modal-body h3 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-highlight);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        .modal-body h3:first-child {
+            margin-top: 0;
+        }
+
+        .modal-body p {
+            color: var(--accent-gray);
+            line-height: 1.9;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .modal-body ul {
+            color: var(--accent-gray);
+            padding-left: 24px;
+            margin-bottom: 24px;
+        }
+
+        .modal-body li {
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .modal-body strong {
+            color: var(--accent-light);
+        }
+
+        .modal-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .modal-tech .tech-tag {
+            font-size: 0.85rem;
+            padding: 6px 14px;
+        }
+
+        .modal-project-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .contact-wrapper {
+                gap: 24px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 100px 16px 60px;
+            }
+
+            section {
+                padding: 60px 16px;
+            }
+
+            .terminal-body {
+                padding: 16px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">$rangga<span>_</span></a>
+            <ul class="nav-links">
+                <li><a href="#skills">skills</a></li>
+                <li><a href="#experience">experience</a></li>
+                <li><a href="#projects">projects</a></li>
+                <li><a href="#contact">contact</a></li>
+            </ul>
+            <div class="mobile-toggle" id="mobileToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#skills">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+    </div>
+
+    <section class="hero">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-dot dot-red"></div>
+                <div class="terminal-dot dot-yellow"></div>
+                <div class="terminal-dot dot-green"></div>
+                <span class="terminal-title">rangga@sysadmin:~</span>
+            </div>
+            <div class="terminal-body">
+                <div class="terminal-line">
+                    <span class="prompt">rangga@sysadmin</span>
+                    <span class="command">~ $</span>
+                    <span id="typingText"></span><span class="cursor" id="cursor"></span>
+                </div>
+                <div class="hero-subtitle">
+                    <span class="output">System Administrator | Linux Enthusiast | Infrastructure Expert</span>
+                    <div class="output" style="margin-top: 16px;">
+                        <span class="highlight">Services:</span> Server Management • Cloud Infrastructure • Security • Automation
+                    </div>
+                    <div class="output" style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 24px;">
+                        <p style="margin-bottom: 12px;">Welcome to my website. Before we delve deeper, let me introduce myself. My name is Rangga Triyanto. I am a seasoned infrastructure engineer with 12 years of experience in roles such as sysadmin, DevOps and as the lead of NOC. I'm proficient in Linux, RedHat, KVM, Ansible, Docker, and kernel tweaking. For a more detailed overview, please download my CV or explore this website further.</p>
+                        <p style="margin-bottom: 12px;">Throughout my career, I've specialized in building robust, scalable infrastructure solutions. From managing enterprise-level Linux environments to implementing cutting-edge DevOps practices, I bring a wealth of hands-on experience to every project. My expertise spans from low-level kernel optimization to high-level cloud architecture design.</p>
+                        <p>When not managing servers, I actively contribute to open-source communities and share knowledge through technical blogs. I believe good documentation is the key to reliable infrastructure, and I'm passionate about mentoring the next generation of system engineers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <div class="section-header">
+            <h2 class="section-title">Skills</h2>
+        </div>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <div class="skill-header">
+                    <div class="skill-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                    </div>
+                    <div>
+                        <div class="skill-name">Linux Administration</div>
+                        <div class="skill-level">Expert</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-header">
+                    <div class="skill-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </div>
+                    <div>
+                        <div class="skill-name">Email Server</div>
+                        <div class="skill-level">Expert</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-header">
+                    <div class="skill-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="skill-name">Virtualization</div>
+                        <div class="skill-level">Advanced</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-header">
+                    <div class="skill-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    </div>
+                    <div>
+                        <div class="skill-name">Networking</div>
+                        <div class="skill-level">Expert</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-header">
+                    <div class="skill-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                    </div>
+                    <div>
+                        <div class="skill-name">Cloud Infrastructure</div>
+                        <div class="skill-level">Advanced</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-header">
+                    <div class="skill-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="skill-name">Security</div>
+                        <div class="skill-level">Advanced</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-header">
+                    <div class="skill-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    </div>
+                    <div>
+                        <div class="skill-name">Scripting & Automation</div>
+                        <div class="skill-level">Advanced</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-header">
+                    <div class="skill-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                    </div>
+                    <div>
+                        <div class="skill-name">Database Administration</div>
+                        <div class="skill-level">Intermediate</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="skill-header">
+                    <div class="skill-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path><path d="M12 2a10 10 0 0 1 10 10"></path><path d="M12 12L2.5 8.5"></path><path d="M12 12V2"></path></svg>
+                    </div>
+                    <div>
+                        <div class="skill-name">AIOps & Automation</div>
+                        <div class="skill-level">Advanced</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience">
+        <div class="section-header">
+            <h2 class="section-title">Work Experience</h2>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">[Feb 2024 - Present]</div>
+                <div class="timeline-content">
+                    <h3>DevOps Engineer</h3>
+                    <div class="timeline-company">Paramatech Indonesia</div>
+                    <p class="timeline-desc">Responsible for ensuring that all development is seamlessly delivered to the production system, embracing the DevOps culture. Paramatech Indonesia delivers HR and Administration recruiting software products to business companies.</p>
+                    <div class="timeline-tech">
+                        <span class="tech-tag">CI/CD</span>
+                        <span class="tech-tag">Kubernetes</span>
+                        <span class="tech-tag">Docker</span>
+                        <span class="tech-tag">Jenkins</span>
+                        <span class="tech-tag">GitLab</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">[Jan 2023 - Jan 2024]</div>
+                <div class="timeline-content">
+                    <h3>Sysadmin DevOps</h3>
+                    <div class="timeline-company">Dynamic Technology Lab Pte Ltd</div>
+                    <p class="timeline-desc">Responsible for ensuring that all development is seamlessly delivered to the production system, embracing the DevOps culture. Managing infrastructure automation and CI/CD pipelines for software delivery.</p>
+                    <div class="timeline-tech">
+                        <span class="tech-tag">Ansible</span>
+                        <span class="tech-tag">Terraform</span>
+                        <span class="tech-tag">AWS</span>
+                        <span class="tech-tag">Jenkins</span>
+                        <span class="tech-tag">GitLab CI</span>
+                        <span class="tech-tag">GitLab Repo</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">[May 2017 - Dec 2023]</div>
+                <div class="timeline-content">
+                    <h3>NOC Lead</h3>
+                    <div class="timeline-company">Desktop IP</div>
+                    <p class="timeline-desc">As Lead of the NOC team, spearheaded the strategic planning for the future of the existing infrastructure, ensuring readiness and robustness in development, staging, and production environments. Played a key role in DevOps activities, efficiently managing Continuous Integration and Continuous Deployment (CI/CD) processes, demonstrating a deep commitment to agile methodologies. Served as the Product Owner for the company's leading virtualization platform, driving its vision, strategy, and execution from inception to market. Spearheaded the end-to-end product lifecycle, from ideation and market research to design, development, launch, and post-launch optimization.</p>
+                    <div class="timeline-tech">
+                        <span class="tech-tag">NOC</span>
+                        <span class="tech-tag">CI/CD</span>
+                        <span class="tech-tag">DevOps</span>
+                        <span class="tech-tag">Product Owner</span>
+                        <span class="tech-tag">Virtualization</span>
+                        <span class="tech-tag">Agile</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">[Mar 2016 - May 2017]</div>
+                <div class="timeline-content">
+                    <h3>VoIP Engineer</h3>
+                    <div class="timeline-company">PT. MNC Kabel Mediakom</div>
+                    <p class="timeline-desc">Responsible for coordinating with vendors and management in implementing and maintaining the VoIP Project, overseeing the Proof of Concept (PoC), ensuring it functioned efficiently and met predetermined specifications and requirements.</p>
+                    <div class="timeline-tech">
+                        <span class="tech-tag">VoIP</span>
+                        <span class="tech-tag">Asterisk</span>
+                        <span class="tech-tag">SIP</span>
+                        <span class="tech-tag">PoC</span>
+                        <span class="tech-tag">Network</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-date">[Dec 2014 - Feb 2016]</div>
+                <div class="timeline-content">
+                    <h3>System Administrator</h3>
+                    <div class="timeline-company">Universitas Indonesia</div>
+                    <p class="timeline-desc">Starting from an internship, I got the opportunity to become a contract employee here as a system administrator responsible for ensuring all systems and servers run optimally, setting up VM with Proxmox, creating a mini site with PHP and Python, and also troubleshooting any issues that arise.</p>
+                    <div class="timeline-tech">
+                        <span class="tech-tag">Proxmox</span>
+                        <span class="tech-tag">PHP</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">VM</span>
+                        <span class="tech-tag">Linux</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="section-header">
+            <h2 class="section-title">Projects</h2>
+        </div>
+        <div class="projects-grid">
+            <div class="project-card">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=200&fit=crop" alt="Infrastructure Monitoring" class="project-image">
+                <div class="project-header">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="project-name">Infrastructure-Monitoring</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">Infrastructure monitoring dashboard using Prometheus and Grafana with custom alerting for server and application uptime.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Prometheus</span>
+                        <span class="tech-tag">Grafana</span>
+                        <span class="tech-tag">Docker</span>
+                        <span class="tech-tag">AlertManager</span>
+                    </div>
+                    <button class="read-more-btn" data-project="monitoring">Read More</button>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=200&fit=crop" alt="Ansible Playbooks" class="project-image">
+                <div class="project-header">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="project-name">Ansible-Playbooks</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">Collection of Ansible playbooks for server deployment automation, network configuration, and structured application provisioning.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Ansible</span>
+                        <span class="tech-tag">Bash</span>
+                        <span class="tech-tag">YAML</span>
+                        <span class="tech-tag">GitLab CI</span>
+                    </div>
+                    <button class="read-more-btn" data-project="ansible">Read More</button>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400&h=200&fit=crop" alt="Mail Server" class="project-image">
+                <div class="project-header">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="project-name">Mail-Server-Hardening</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">Email server security implementation with multi-layer protection: SPF, DKIM, DMARC, and spam filtering using Rspamd.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Postfix</span>
+                        <span class="tech-tag">Dovecot</span>
+                        <span class="tech-tag">Rspamd</span>
+                        <span class="tech-tag">Redis</span>
+                    </div>
+                    <button class="read-more-btn" data-project="mail">Read More</button>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop" alt="HA Cluster" class="project-image">
+                <div class="project-header">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="project-name">HA-Cluster-Setup</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">High-availability cluster setup using Keepalived and HAProxy for load balancing with automatic failover.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Keepalived</span>
+                        <span class="tech-tag">HAProxy</span>
+                        <span class="tech-tag">VRRP</span>
+                        <span class="tech-tag">Ubuntu</span>
+                    </div>
+                    <button class="read-more-btn" data-project="ha">Read More</button>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop" alt="AIOps Automation" class="project-image">
+                <div class="project-header">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="project-name">OpenClaw-AIOps</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">AI-powered operations automation platform for intelligent incident response, predictive maintenance, and automated remediation.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">OpenClaw</span>
+                        <span class="tech-tag">ETCh</span>
+                        <span class="tech-tag">ML/AI</span>
+                    </div>
+                    <button class="read-more-btn" data-project="aiops">Read More</button>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=400&h=200&fit=crop" alt="Moodle E-Learning" class="project-image">
+                <div class="project-header">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="project-name">Moodle-E-Learning</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">E-learning system based on Moodle for undergraduate and postgraduate students, featuring quizzes, exams, courses, grading, and report cards.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Moodle</span>
+                        <span class="tech-tag">Nginx</span>
+                        <span class="tech-tag">MySQL</span>
+                        <span class="tech-tag">PHP</span>
+                        <span class="tech-tag">NFS</span>
+                    </div>
+                    <button class="read-more-btn" data-project="moodle">Read More</button>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=200&fit=crop" alt="LTSP Computer Lab" class="project-image">
+                <div class="project-header">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="project-name">LTSP-Lab-Infrastructure</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">Lab environment using Fat Client LTSP technology for learning activities, exams, and penetration testing labs across multiple university computer labs.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">LTSP</span>
+                        <span class="tech-tag">Linux</span>
+                        <span class="tech-tag">LDAP</span>
+                        <span class="tech-tag">NFS</span>
+                        <span class="tech-tag">TFTP</span>
+                    </div>
+                    <button class="read-more-btn" data-project="ltsp">Read More</button>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=200&fit=crop" alt="IoT Faculty Monitor" class="project-image">
+                <div class="project-header">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="project-name">IoT-Faculty-Monitor</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">IoT project for monitoring faculty scheduling information system, displaying learning information on lobby monitors for students and lecturers.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Raspberry Pi</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Flask</span>
+                        <span class="tech-tag">NFS</span>
+                        <span class="tech-tag">IoT</span>
+                    </div>
+                    <button class="read-more-btn" data-project="iot">Read More</button>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=200&fit=crop" alt="Virtualiztic Platform" class="project-image">
+                <div class="project-header">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="project-name">Virtualiztic-Platform</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">On-premise virtualization platform built from scratch using KVM and Linux, designed for companies requiring private cloud solutions.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">KVM</span>
+                        <span class="tech-tag">Linux</span>
+                        <span class="tech-tag">DRBD</span>
+                        <span class="tech-tag">iSCSI</span>
+                        <span class="tech-tag">HAProxy</span>
+                        <span class="tech-tag">Grafana</span>
+                        <span class="tech-tag">Prometheus</span>
+                    </div>
+                    <button class="read-more-btn" data-project="virtualiztic">Read More</button>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <img src="https://images.unsplash.com/photo-1558160074-4d7d9a38753f?w=400&h=200&fit=crop" alt="PaBX Audio Optimization" class="project-image">
+                <div class="project-header">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span class="project-name">PaBX-Audio-Optimization</span>
+                </div>
+                <div class="project-body">
+                    <p class="project-desc">Optimizing VoIP audio quality on PABX devices, transforming unclear voice into crystal clear communication.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">VoIP</span>
+                        <span class="tech-tag">PABX</span>
+                        <span class="tech-tag">QoS</span>
+                        <span class="tech-tag">G.711</span>
+                        <span class="tech-tag">G.729</span>
+                        <span class="tech-tag">Echo Cancellation</span>
+                    </div>
+                    <button class="read-more-btn" data-project="pabxOptimization">Read More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="section-header">
+            <h2 class="section-title">Contact Me</h2>
+        </div>
+        <div class="contact-wrapper">
+            <div class="contact-info">
+                <h3>Let's Connect</h3>
+                <p>I'm always open to discussing new projects, collaboration opportunities, or just exchanging ideas about infrastructure technology. Feel free to reach out.</p>
+                <div class="contact-links">
+                    <a href="mailto:rangga.triyanto@email.com" class="contact-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <span class="mono">rangga.triyanto@email.com</span>
+                    </a>
+                    <a href="#" class="contact-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        <span class="mono">linkedin.com/in/ranggatriyanto</span>
+                    </a>
+                    <a href="#" class="contact-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                        <span class="mono">github.com/ranggatriyanto</span>
+                    </a>
+                    <a href="#" class="contact-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <span class="mono">Jakarta, Indonesia</span>
+                    </a>
+                </div>
+            </div>
+            <div class="contact-wa">
+                <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="wa-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Chat via WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">Designed & Built by <span>Rangga Triyanto</span> © 2024</p>
+            <p class="footer-text" style="margin-top: 8px; opacity: 0.6;">Last updated: <span id="lastDeploy"></span></p>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <svg class="project-folder" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <span id="modalTitle">Project Name</span>
+                </div>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const text = "Hello, I am Rangga Triyanto - System Administrator";
+            const typingText = document.getElementById('typingText');
+            const cursor = document.getElementById('cursor');
+            let i = 0;
+
+            function typeWriter() {
+                if (i < text.length) {
+                    typingText.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                } else {
+                    cursor.style.display = 'none';
+                }
+            }
+
+            setTimeout(typeWriter, 500);
+
+            const mobileToggle = document.getElementById('mobileToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            mobileToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('active');
+            });
+
+            document.querySelectorAll('.mobile-menu a').forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+
+            const navLinks = document.querySelectorAll('.nav-links a');
+            const sections = document.querySelectorAll('section[id]');
+
+            window.addEventListener('scroll', function() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (scrollY >= sectionTop - 200) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+const lastDeploy = document.getElementById('lastDeploy');
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit',
+                timeZoneName: 'short'
+            };
+            lastDeploy.textContent = now.toLocaleDateString('en-US', options);
+
+            var projectData = {
+                monitoring: {
+                    title: 'Infrastructure-Monitoring',
+                    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop',
+                    content: '<p>A comprehensive infrastructure monitoring solution built with Prometheus and Grafana.</p><h3>Key Features</h3><ul><li>Real-time server metrics collection and visualization</li><li>Custom alerting rules with AlertManager integration</li><li>Multi-node cluster monitoring support</li><li>Historical data analysis and trend reporting</li></ul>',
+                    tech: ['Prometheus', 'Grafana', 'Docker', 'AlertManager', 'node_exporter', 'Slack']
+                },
+                ansible: {
+                    title: 'Ansible-Playbooks',
+                    image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=400&fit=crop',
+                    content: '<p>A comprehensive collection of Ansible playbooks for automated server deployment.</p><h3>Playbook Categories</h3><ul><li><strong>Server Provisioning:</strong> Automated OS installation and hardening</li><li><strong>Network Setup:</strong> Firewall rules and VPN tunnels</li><li><strong>Application Deployment:</strong> Container orchestration</li></ul>',
+                    tech: ['Ansible', 'Bash', 'YAML', 'GitLab CI', 'Ansible Tower', 'Docker']
+                },
+                mail: {
+                    title: 'Mail-Server-Hardening',
+                    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=400&fit=crop',
+                    content: '<p>Enterprise-grade email server security implementation with multi-layer protection.</p><h3>Security Layers</h3><ul><li><strong>SPF:</strong> Validates sending mail servers</li><li><strong>DKIM:</strong> Email authentication using signatures</li><li><strong>DMARC:</strong> Policy enforcement and reporting</li><li><strong>Rspamd:</strong> Advanced spam filtering</li></ul>',
+                    tech: ['Postfix', 'Dovecot', 'Rspamd', 'Redis', 'SPF', 'DKIM', 'DMARC']
+                },
+                ha: {
+                    title: 'HA-Cluster-Setup',
+                    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop',
+                    content: '<p>High-availability cluster implementation using Keepalived and HAProxy.</p><h3>Architecture</h3><ul><li><strong>VRRP:</strong> Automatic failover between nodes</li><li><strong>HAProxy:</strong> Layer 4 and Layer 7 load balancing</li><li><strong>Session Persistence:</strong> sticky sessions</li><li><strong>SSL Termination:</strong> Let\'s Encrypt integration</li></ul>',
+                    tech: ['Keepalived', 'HAProxy', 'VRRP', 'Ubuntu', 'Zabbix', 'Let\'s Encrypt']
+                },
+                aiops: {
+                    title: 'OpenClaw-AIOps',
+                    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop',
+                    content: '<p>AI-powered operations automation platform leveraging OpenClaw and ETCh frameworks for intelligent infrastructure management. This solution combines machine learning algorithms with traditional system administration to create a self-healing infrastructure ecosystem.</p><h3>Key Capabilities</h3><ul><li><strong>Intelligent Incident Response:</strong> Automated detection and remediation of system anomalies using ML models</li><li><strong>Predictive Maintenance:</strong> Proactive identification of potential failures before they impact services</li><li><strong>OpenClaw Integration:</strong> Automated workflow orchestration for complex operational tasks</li><li><strong>ETCh Framework:</strong> Event-driven automation for real-time infrastructure adjustments</li></ul><h3>Benefits</h3><p>Reduced MTTR by 75%, eliminated 90% of manual repetitive tasks, and achieved 99.99% uptime through predictive interventions.</p>',
+                    tech: ['Python', 'OpenClaw', 'ETCh', 'TensorFlow', 'Prometheus', 'Kubernetes', 'ML/AI']
+                },
+                moodle: {
+                    title: 'Moodle-E-Learning',
+                    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&h=400&fit=crop',
+                    content: '<p>Creating an e-learning system based on Moodle, which is used as a learning medium for undergraduate (S1) and postgraduate (S2) students, lecturers, and facilitators. I developed an online e-learning platform with features quizzes, exams, courses, grading, report cards, and announcements to support and streamline the learning experience.</p><h3>Live Projects</h3><ul><li><strong>SCELE UI:</strong> <a href="https://scele.cs.ui.ac.id" target="_blank" style="color: var(--accent-blue);">https://scele.cs.ui.ac.id</a> - Main e-learning platform for CS Department</li><li><strong>Postgraduate Program:</strong> <a href="https://scele.cs.ui.ac.id/mti" target="_blank" style="color: var(--accent-blue);">https://scele.cs.ui.ac.id/mti</a> - MTI Program e-learning</li></ul><h3>Project Challenge</h3><p>I was assigned to migrate the e-learning system from an outdated/deprecated system to a newer one using Moodle. The challenge was that much of the source code from the old system was obsolete. My solution was to design a Moodle CMS for the new system while still using the database from the old system.</p>',
+                    tech: ['Moodle', 'Nginx', 'MySQL', 'PHP', 'NFS']
+                },
+                ltsp: {
+                    title: 'LTSP-Lab-Infrastructure',
+                    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=400&fit=crop',
+                    content: '<p>Creating a lab environment to optimize the available resources using Fat Client LTSP technology. The lab is used for learning activities, exams, and also penetration testing labs.</p><h3>Implementation</h3><p>I was assigned to ensure that several university labs operated optimally with minimal resources. I proposed the idea of implementing LTSP in various labs, including the Learning Lab, the Penetration Testing Lab, computers in the library, and the Examination Lab.</p><p>I implemented LTSP using the Fat Client method, so that the CPU and RAM resources are drawn from the local computer, but the disk utilizes a centralized image. The accounts utilized LDAP authentication. As a result, when a user logs into this LTSP system, they are directed based on their authority. For instance, students are directed to the student desktop, while lecturers are directed to the lecturer\'s desktop.</p><h3>Challenge & Solution</h3><p>The challenge in this project was bandwidth allocation, as a bottleneck could occur if the network-level resource composition was insufficient. The solution was to conduct minimum testing in batches for each resource. Since one lab could contain up to 100 computers, the testing was carried out in 5 batches. Once the optimal figure for each computer was determined, it was necessary to implement QoS at the network level and also enhance hardware resources at the network level.</p>',
+                    tech: ['Linux', 'TFTP', 'NFS', 'LDAP', 'Proxy', 'NAT', 'Customize Linux Image', 'Cisco Router', 'Juniper Router', 'Cisco Switch', 'Mikrotik']
+                },
+                iot: {
+                    title: 'IoT-Faculty-Monitor',
+                    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop',
+                    content: '<p>Creating an IoT project used for monitoring the faculty scheduling information system, so that students and lecturers can view learning information from the lobby monitor.</p><h3>Implementation</h3><p>In this project, I was responsible for designing and planning the Raspberry Pi hardware that connected to a monitor to display the learning scheduling system. The system provided real-time access to class schedules, room assignments, and announcements for both students and lecturers.</p><h3>Hardware & Software</h3><p>The solution utilized Raspberry Pi as the core computing unit, connected to large lobby displays. The backend was built with Python Flask framework, providing a lightweight web interface for displaying schedule data. NFS was used as storage backend for the scheduling data and system resources.</p>',
+                    tech: ['Raspberry Pi', 'Python', 'Flask', 'NFS', 'IoT', 'Linux']
+                },
+                virtualiztic: {
+                    title: 'Virtualiztic-Platform',
+                    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=400&fit=crop',
+                    content: '<p>Creating, planning, and designing a cloud platform from scratch, used by end users as an on-premise VPS, utilizing KVM and Linux technologies. This platform is intended for sale to companies that require a private cloud or on-premise solution, ensuring it cannot be accessed publicly.</p><h3>My Role</h3><p>I was assigned to create a backend script using shell script and Python which would be utilized by the frontend as its main function. I conducted research and implemented the best technology to be used on the virtualization platform.</p><h3>Technologies Implemented</h3><ul><li><strong>Storage:</strong> NFS, SAN, iSCSI, SCSI, LVM, RAID, ZFS, OCFS2</li><li><strong>High Availability:</strong> DRBD, HAProxy, database master-slave replication</li><li><strong>Security & Networking:</strong> iptables, DNS integration</li><li><strong>Monitoring:</strong> Grafana, Prometheus</li><li><strong>Infrastructure:</strong> Redis, FTP, NTP, Nginx, CDN Varnish, MySQL</li><li><strong>Packaging:</strong> Creating .deb packages and establishing a dedicated repository</li></ul><h3>Ecosystem Development</h3><p>In addition to creating the Virtualiztic product itself, I developed several supporting ecosystems including a dedicated repository, installation scripts and customizations, automatic driver installation, and integration with storage, DNS, and network infrastructure.</p>',
+                    tech: ['KVM', 'Linux', 'OCFS2', 'DRBD', 'iSCSI', 'SCSI', 'NFS', 'RAID', 'mdadm', 'HAProxy', 'Redis', 'FTP', 'NTP', 'iptables', 'MySQL', 'ZFS', 'Shell Script', 'Grafana', 'Prometheus', 'Nginx', 'CDN Varnish']
+                },
+                pabxOptimization: {
+                    title: 'PaBX-Audio-Optimization',
+                    image: 'https://images.unsplash.com/photo-1558160074-4d7d9a38753f?w=800&h=400&fit=crop',
+                    content: '<p>Optimizing the sound on VoIP technology used in PABX devices, so that the previously unclear voice becomes crystal clear.</p><h3>Steps Taken</h3><ul><li><strong>Quality of Service (QoS):</strong> Implemented QoS on the network to prioritize VoIP traffic over other types of traffic. This helps reduce latency, jitter, and packet loss which can affect sound quality.</li><li><strong>Codec Selection:</strong> The codec is what compresses and decompresses voice data. Some codecs require more bandwidth but offer better quality. G.711 is a high bandwidth-high quality codec, while G.729 uses less bandwidth with a slight reduction in quality. Selected the optimal codec for the use case.</li><li><strong>Echo Cancellation:</strong> Echo can be a significant issue in VoIP systems. Implemented echo cancellation to eliminate feedback and improve call clarity.</li></ul>',
+                    tech: ['VoIP', 'PABX', 'QoS', 'G.711', 'G.729', 'Echo Cancellation', 'SIP', 'Network Optimization']
+                }
+            };
+
+            var modal = document.getElementById('projectModal');
+            var modalTitle = document.getElementById('modalTitle');
+            var modalBody = document.getElementById('modalBody');
+            var modalClose = document.getElementById('modalClose');
+            
+            console.log('Modal elements:', {modal: !!modal, modalTitle: !!modalTitle, modalBody: !!modalBody, modalClose: !!modalClose});
+
+            window.openProjectModal = function(projectId) {
+                console.log('Opening modal for:', projectId);
+                var project = projectData[projectId];
+                if (!project) {
+                    console.error('Project not found:', projectId);
+                    return;
+                }
+
+                modalTitle.textContent = project.title;
+
+                var imageHtml = '<img src="' + project.image + '" alt="' + project.title + '" class="modal-project-image">';
+
+                var techHtml = '<div class="modal-tech">';
+                for (var j = 0; j < project.tech.length; j++) {
+                    techHtml += '<span class="tech-tag">' + project.tech[j] + '</span>';
+                }
+                techHtml += '</div>';
+
+                modalBody.innerHTML = imageHtml + project.content + techHtml;
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                console.log('Modal should be visible now');
+            };
+
+            window.closeProjectModal = function() {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            };
+
+            var readMoreBtns = document.querySelectorAll('.read-more-btn');
+            console.log('Found Read More buttons:', readMoreBtns.length);
+            
+            for (var k = 0; k < readMoreBtns.length; k++) {
+                readMoreBtns[k].onclick = function() {
+                    var projectId = this.getAttribute('data-project');
+                    console.log('Button clicked, project:', projectId);
+                    window.openProjectModal(projectId);
+                };
+            }
+
+            if (modalClose) {
+                modalClose.onclick = window.closeProjectModal;
+            }
+            
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    window.closeProjectModal();
+                }
+            };
+
+            document.onkeydown = function(e) {
+                if (e.key === 'Escape' && modal.style.display === 'flex') {
+                    window.closeProjectModal();
+                }
+            };
+        });
+    </script>
+</body>
+</html>

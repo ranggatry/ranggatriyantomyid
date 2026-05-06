@@ -1,0 +1,202 @@
+{
+  "hero": {
+    "typing_text": "Hello, I am Rangga Triyanto - System Administrator",
+    "subtitle": "System Administrator | Linux Enthusiast | Infrastructure Expert",
+    "services": "Server Management • Cloud Infrastructure • Security • Automation",
+    "about_paragraphs": [
+      "Welcome to my website. Before we delve deeper, let me introduce myself. My name is Rangga Triyanto. I am a seasoned infrastructure engineer with 12 years of experience in roles such as sysadmin, DevOps and as the lead of NOC. I'm proficient in Linux, RedHat, KVM, Ansible, Docker, and kernel tweaking. For a more detailed overview, please download my CV or explore this website further.",
+      "Throughout my career, I've specialized in building robust, scalable infrastructure solutions. From managing enterprise-level Linux environments to implementing cutting-edge DevOps practices, I bring a wealth of hands-on experience to every project. My expertise spans from low-level kernel optimization to high-level cloud architecture design.",
+      "When not managing servers, I actively contribute to open-source communities and share knowledge through technical blogs. I believe good documentation is the key to reliable infrastructure, and I'm passionate about mentoring the next generation of system engineers."
+    ]
+  },
+  "skills": [
+    { "name": "Linux Administration", "level": "Expert" },
+    { "name": "Email Server", "level": "Expert" },
+    { "name": "Virtualization", "level": "Advanced" },
+    { "name": "Networking", "level": "Expert" },
+    { "name": "Cloud Infrastructure", "level": "Advanced" },
+    { "name": "Security", "level": "Advanced" },
+    { "name": "Scripting & Automation", "level": "Advanced" },
+    { "name": "Database Administration", "level": "Intermediate" },
+    { "name": "AIOps & Automation", "level": "Advanced" }
+  ],
+  "experience": [
+    {
+      "date": "Feb 2024 - Present",
+      "role": "DevOps Engineer",
+      "company": "Paramatech Indonesia",
+      "description": "Responsible for ensuring that all development is seamlessly delivered to the production system, embracing the DevOps culture. Paramatech Indonesia delivers HR and Administration recruiting software products to business companies.",
+      "tags": ["CI/CD", "Kubernetes", "Docker", "Jenkins", "GitLab"]
+    },
+    {
+      "date": "Jan 2023 - Jan 2024",
+      "role": "Sysadmin DevOps",
+      "company": "Dynamic Technology Lab Pte Ltd",
+      "description": "Responsible for ensuring that all development is seamlessly delivered to the production system, embracing the DevOps culture. Managing infrastructure automation and CI/CD pipelines for software delivery.",
+      "tags": ["Ansible", "Terraform", "AWS", "Jenkins", "GitLab CI", "GitLab Repo"]
+    },
+    {
+      "date": "May 2017 - Dec 2023",
+      "role": "NOC Lead",
+      "company": "Desktop IP",
+      "description": "As Lead of the NOC team, spearheaded the strategic planning for the future of the existing infrastructure, ensuring readiness and robustness in development, staging, and production environments. Played a key role in DevOps activities, efficiently managing Continuous Integration and Continuous Deployment (CI/CD) processes, demonstrating a deep commitment to agile methodologies. Served as the Product Owner for the company's leading virtualization platform, driving its vision, strategy, and execution from inception to market. Spearheaded the end-to-end product lifecycle, from ideation and market research to design, development, launch, and post-launch optimization.",
+      "tags": ["NOC", "CI/CD", "DevOps", "Product Owner", "Virtualization", "Agile"]
+    },
+    {
+      "date": "Mar 2016 - May 2017",
+      "role": "VoIP Engineer",
+      "company": "PT. MNC Kabel Mediakom",
+      "description": "Responsible for coordinating with vendors and management in implementing and maintaining the VoIP Project, overseeing the Proof of Concept (PoC), ensuring it functioned efficiently and met predetermined specifications and requirements.",
+      "tags": ["VoIP", "Asterisk", "SIP", "PoC", "Network"]
+    },
+    {
+      "date": "Dec 2014 - Feb 2016",
+      "role": "System Administrator",
+      "company": "Universitas Indonesia",
+      "description": "Starting from an internship, I got the opportunity to become a contract employee here as a system administrator responsible for ensuring all systems and servers run optimally, setting up VM with Proxmox, creating a mini site with PHP and Python, and also troubleshooting any issues that arise.",
+      "tags": ["Proxmox", "PHP", "Python", "VM", "Linux"]
+    }
+  ],
+  "projects": [
+    {
+      "id": "monitoring",
+      "name": "Infrastructure-Monitoring",
+      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=200&fit=crop",
+      "description": "Infrastructure monitoring dashboard using Prometheus and Grafana with custom alerting for server and application uptime.",
+      "tags": ["Prometheus", "Grafana", "Docker", "AlertManager"],
+      "modal_content": {
+        "title": "Infrastructure-Monitoring",
+        "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop",
+        "content": "<p>A comprehensive infrastructure monitoring solution built with Prometheus and Grafana.</p><h3>Key Features</h3><ul><li>Real-time server metrics collection and visualization</li><li>Custom alerting rules with AlertManager integration</li><li>Multi-node cluster monitoring support</li><li>Historical data analysis and trend reporting</li></ul>",
+        "tags": ["Prometheus", "Grafana", "Docker", "AlertManager", "node_exporter", "Slack"]
+      }
+    },
+    {
+      "id": "ansible",
+      "name": "Ansible-Playbooks",
+      "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=200&fit=crop",
+      "description": "Collection of Ansible playbooks for server deployment automation, network configuration, and structured application provisioning.",
+      "tags": ["Ansible", "Bash", "YAML", "GitLab CI"],
+      "modal_content": {
+        "title": "Ansible-Playbooks",
+        "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=400&fit=crop",
+        "content": "<p>A comprehensive collection of Ansible playbooks for automated server deployment.</p><h3>Playbook Categories</h3><ul><li><strong>Server Provisioning:</strong> Automated OS installation and hardening</li><li><strong>Network Setup:</strong> Firewall rules and VPN tunnels</li><li><strong>Application Deployment:</strong> Container orchestration</li></ul>",
+        "tags": ["Ansible", "Bash", "YAML", "GitLab CI", "Ansible Tower", "Docker"]
+      }
+    },
+    {
+      "id": "mail",
+      "name": "Mail-Server-Hardening",
+      "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400&h=200&fit=crop",
+      "description": "Email server security implementation with multi-layer protection: SPF, DKIM, DMARC, and spam filtering using Rspamd.",
+      "tags": ["Postfix", "Dovecot", "Rspamd", "Redis"],
+      "modal_content": {
+        "title": "Mail-Server-Hardening",
+        "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=400&fit=crop",
+        "content": "<p>Enterprise-grade email server security implementation with multi-layer protection.</p><h3>Security Layers</h3><ul><li><strong>SPF:</strong> Validates sending mail servers</li><li><strong>DKIM:</strong> Email authentication using signatures</li><li><strong>DMARC:</strong> Policy enforcement and reporting</li><li><strong>Rspamd:</strong> Advanced spam filtering</li></ul>",
+        "tags": ["Postfix", "Dovecot", "Rspamd", "Redis", "SPF", "DKIM", "DMARC"]
+      }
+    },
+    {
+      "id": "ha",
+      "name": "HA-Cluster-Setup",
+      "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=200&fit=crop",
+      "description": "High-availability cluster setup using Keepalived and HAProxy for load balancing with automatic failover.",
+      "tags": ["Keepalived", "HAProxy", "VRRP", "Ubuntu"],
+      "modal_content": {
+        "title": "HA-Cluster-Setup",
+        "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop",
+        "content": "<p>High-availability cluster implementation using Keepalived and HAProxy.</p><h3>Architecture</h3><ul><li><strong>VRRP:</strong> Automatic failover between nodes</li><li><strong>HAProxy:</strong> Layer 4 and Layer 7 load balancing</li><li><strong>Session Persistence:</strong> sticky sessions</li><li><strong>SSL Termination:</strong> Let's Encrypt integration</li></ul>",
+        "tags": ["Keepalived", "HAProxy", "VRRP", "Ubuntu", "Zabbix", "Let's Encrypt"]
+      }
+    },
+    {
+      "id": "aiops",
+      "name": "OpenClaw-AIOps",
+      "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=200&fit=crop",
+      "description": "AI-powered operations automation platform for intelligent incident response, predictive maintenance, and automated remediation.",
+      "tags": ["Python", "OpenClaw", "ETCh", "ML/AI"],
+      "modal_content": {
+        "title": "OpenClaw-AIOps",
+        "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop",
+        "content": "<p>AI-powered operations automation platform leveraging OpenClaw and ETCh frameworks for intelligent infrastructure management. This solution combines machine learning algorithms with traditional system administration to create a self-healing infrastructure ecosystem.</p><h3>Key Capabilities</h3><ul><li><strong>Intelligent Incident Response:</strong> Automated detection and remediation of system anomalies using ML models</li><li><strong>Predictive Maintenance:</strong> Proactive identification of potential failures before they impact services</li><li><strong>OpenClaw Integration:</strong> Automated workflow orchestration for complex operational tasks</li><li><strong>ETCh Framework:</strong> Event-driven automation for real-time infrastructure adjustments</li></ul><h3>Benefits</h3><p>Reduced MTTR by 75%, eliminated 90% of manual repetitive tasks, and achieved 99.99% uptime through predictive interventions.</p>",
+        "tags": ["Python", "OpenClaw", "ETCh", "TensorFlow", "Prometheus", "Kubernetes", "ML/AI"]
+      }
+    },
+    {
+      "id": "moodle",
+      "name": "Moodle-E-Learning",
+      "image": "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=400&h=200&fit=crop",
+      "description": "E-learning system based on Moodle for undergraduate and postgraduate students, featuring quizzes, exams, courses, grading, and report cards.",
+      "tags": ["Moodle", "Nginx", "MySQL", "PHP", "NFS"],
+      "modal_content": {
+        "title": "Moodle-E-Learning",
+        "image": "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&h=400&fit=crop",
+        "content": "<p>Creating an e-learning system based on Moodle, which is used as a learning medium for undergraduate (S1) and postgraduate (S2) students, lecturers, and facilitators. I developed an online e-learning platform with features quizzes, exams, courses, grading, report cards, and announcements to support and streamline the learning experience.</p><h3>Live Projects</h3><ul><li><strong>SCELE UI:</strong> <a href=\"https://scele.cs.ui.ac.id\" target=\"_blank\" style=\"color: var(--accent-blue);\">https://scele.cs.ui.ac.id</a> - Main e-learning platform for CS Department</li><li><strong>Postgraduate Program:</strong> <a href=\"https://scele.cs.ui.ac.id/mti\" target=\"_blank\" style=\"color: var(--accent-blue);\">https://scele.cs.ui.ac.id/mti</a> - MTI Program e-learning</li></ul><h3>Project Challenge</h3><p>I was assigned to migrate the e-learning system from an outdated/deprecated system to a newer one using Moodle. The challenge was that much of the source code from the old system was obsolete. My solution was to design a Moodle CMS for the new system while still using the database from the old system.</p>",
+        "tags": ["Moodle", "Nginx", "MySQL", "PHP", "NFS"]
+      }
+    },
+    {
+      "id": "ltsp",
+      "name": "LTSP-Lab-Infrastructure",
+      "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=200&fit=crop",
+      "description": "Lab environment using Fat Client LTSP technology for learning activities, exams, and penetration testing labs across multiple university computer labs.",
+      "tags": ["LTSP", "Linux", "LDAP", "NFS", "TFTP"],
+      "modal_content": {
+        "title": "LTSP-Lab-Infrastructure",
+        "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=400&fit=crop",
+        "content": "<p>Creating a lab environment to optimize the available resources using Fat Client LTSP technology. The lab is used for learning activities, exams, and also penetration testing labs.</p><h3>Implementation</h3><p>I was assigned to ensure that several university labs operated optimally with minimal resources. I proposed the idea of implementing LTSP in various labs, including the Learning Lab, the Penetration Testing Lab, computers in the library, and the Examination Lab.</p><p>I implemented LTSP using the Fat Client method, so that the CPU and RAM resources are drawn from the local computer, but the disk utilizes a centralized image. The accounts utilized LDAP authentication. As a result, when a user logs into this LTSP system, they are directed based on their authority. For instance, students are directed to the student desktop, while lecturers are directed to the lecturer's desktop.</p><h3>Challenge & Solution</h3><p>The challenge in this project was bandwidth allocation, as a bottleneck could occur if the network-level resource composition was insufficient. The solution was to conduct minimum testing in batches for each resource. Since one lab could contain up to 100 computers, the testing was carried out in 5 batches. Once the optimal figure for each computer was determined, it was necessary to implement QoS at the network level and also enhance hardware resources at the network level.</p>",
+        "tags": ["Linux", "TFTP", "NFS", "LDAP", "Proxy", "NAT", "Customize Linux Image", "Cisco Router", "Juniper Router", "Cisco Switch", "Mikrotik"]
+      }
+    },
+    {
+      "id": "iot",
+      "name": "IoT-Faculty-Monitor",
+      "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=200&fit=crop",
+      "description": "IoT project for monitoring faculty scheduling information system, displaying learning information on lobby monitors for students and lecturers.",
+      "tags": ["Raspberry Pi", "Python", "Flask", "NFS", "IoT"],
+      "modal_content": {
+        "title": "IoT-Faculty-Monitor",
+        "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop",
+        "content": "<p>Creating an IoT project used for monitoring the faculty scheduling information system, so that students and lecturers can view learning information from the lobby monitor.</p><h3>Implementation</h3><p>In this project, I was responsible for designing and planning the Raspberry Pi hardware that connected to a monitor to display the learning scheduling system. The system provided real-time access to class schedules, room assignments, and announcements for both students and lecturers.</p><h3>Hardware & Software</h3><p>The solution utilized Raspberry Pi as the core computing unit, connected to large lobby displays. The backend was built with Python Flask framework, providing a lightweight web interface for displaying schedule data. NFS was used as storage backend for the scheduling data and system resources.</p>",
+        "tags": ["Raspberry Pi", "Python", "Flask", "NFS", "IoT", "Linux"]
+      }
+    },
+    {
+      "id": "virtualiztic",
+      "name": "Virtualiztic-Platform",
+      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=200&fit=crop",
+      "description": "On-premise virtualization platform built from scratch using KVM and Linux, designed for companies requiring private cloud solutions.",
+      "tags": ["KVM", "Linux", "DRBD", "iSCSI", "HAProxy", "Grafana", "Prometheus"],
+      "modal_content": {
+        "title": "Virtualiztic-Platform",
+        "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=400&fit=crop",
+        "content": "<p>Creating, planning, and designing a cloud platform from scratch, used by end users as an on-premise VPS, utilizing KVM and Linux technologies. This platform is intended for sale to companies that require a private cloud or on-premise solution, ensuring it cannot be accessed publicly.</p><h3>My Role</h3><p>I was assigned to create a backend script using shell script and Python which would be utilized by the frontend as its main function. I conducted research and implemented the best technology to be used on the virtualization platform.</p><h3>Technologies Implemented</h3><ul><li><strong>Storage:</strong> NFS, SAN, iSCSI, SCSI, LVM, RAID, ZFS, OCFS2</li><li><strong>High Availability:</strong> DRBD, HAProxy, database master-slave replication</li><li><strong>Security & Networking:</strong> iptables, DNS integration</li><li><strong>Monitoring:</strong> Grafana, Prometheus</li><li><strong>Infrastructure:</strong> Redis, FTP, NTP, Nginx, CDN Varnish, MySQL</li><li><strong>Packaging:</strong> Creating .deb packages and establishing a dedicated repository</li></ul><h3>Ecosystem Development</h3><p>In addition to creating the Virtualiztic product itself, I developed several supporting ecosystems including a dedicated repository, installation scripts and customizations, automatic driver installation, and integration with storage, DNS, and network infrastructure.</p>",
+        "tags": ["KVM", "Linux", "OCFS2", "DRBD", "iSCSI", "SCSI", "NFS", "RAID", "mdadm", "HAProxy", "Redis", "FTP", "NTP", "iptables", "MySQL", "ZFS", "Shell Script", "Grafana", "Prometheus", "Nginx", "CDN Varnish"]
+      }
+    },
+    {
+      "id": "pabx-optimization",
+      "name": "PaBX-Audio-Optimization",
+      "image": "https://images.unsplash.com/photo-1558160074-4d7d9a38753f?w=400&h=200&fit=crop",
+      "description": "Optimizing VoIP audio quality on PABX devices, transforming unclear voice into crystal clear communication.",
+      "tags": ["VoIP", "PABX", "QoS", "G.711", "G.729", "Echo Cancellation"],
+      "modal_content": {
+        "title": "PaBX-Audio-Optimization",
+        "image": "https://images.unsplash.com/photo-1558160074-4d7d9a38753f?w=800&h=400&fit=crop",
+        "content": "<p>Optimizing the sound on VoIP technology used in PABX devices, so that the previously unclear voice becomes crystal clear.</p><h3>Steps Taken</h3><ul><li><strong>Quality of Service (QoS):</strong> Implemented QoS on the network to prioritize VoIP traffic over other types of traffic. This helps reduce latency, jitter, and packet loss which can affect sound quality.</li><li><strong>Codec Selection:</strong> The codec is what compresses and decompresses voice data. Some codecs require more bandwidth but offer better quality. G.711 is a high bandwidth-high quality codec, while G.729 uses less bandwidth with a slight reduction in quality. Selected the optimal codec for the use case.</li><li><strong>Echo Cancellation:</strong> Echo can be a significant issue in VoIP systems. Implemented echo cancellation to eliminate feedback and improve call clarity.</li></ul>",
+        "tags": ["VoIP", "PABX", "QoS", "G.711", "G.729", "Echo Cancellation", "SIP", "Network Optimization"]
+      }
+    }
+  ],
+  "contact": {
+    "email": "rangga.triyanto@email.com",
+    "linkedin": "linkedin.com/in/ranggatriyanto",
+    "github": "github.com/ranggatriyanto",
+    "location": "Jakarta, Indonesia"
+  },
+  "settings": {
+    "site_title": "Rangga Triyanto - System Administrator",
+    "profile_image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=180&h=180&fit=crop&crop=face"
+  }
+}

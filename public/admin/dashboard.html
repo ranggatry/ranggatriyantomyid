@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Rangga Triyanto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-terminal: #1e252e;
+            --accent-gray: #8b949e;
+            --accent-light: #c9d1d9;
+            --accent-highlight: #e6edf3;
+            --accent-blue: #58a6ff;
+            --prompt-green: #7ee787;
+            --error-red: #f85149;
+            --success-green: #3fb950;
+            --border-color: #30363d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--accent-light);
+            min-height: 100vh;
+        }
+
+        /* Layout */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 24px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 24px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header h2 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--prompt-green);
+            font-size: 1.25rem;
+        }
+
+        .sidebar-header p {
+            color: var(--accent-gray);
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        .nav-section {
+            padding: 8px 16px;
+        }
+
+        .nav-section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            padding: 0 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            color: var(--accent-gray);
+            text-decoration: none;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-terminal);
+            color: var(--accent-light);
+        }
+
+        .nav-item.active {
+            background: var(--bg-terminal);
+            color: var(--accent-highlight);
+            border-left: 3px solid var(--prompt-green);
+        }
+
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .sidebar-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .logout-btn {
+            width: 100%;
+            background: transparent;
+            color: var(--accent-gray);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--error-red);
+            color: white;
+            border-color: var(--error-red);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .content-header h1 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-highlight);
+            font-size: 1.5rem;
+        }
+
+        .content-header h1::before {
+            content: '// ';
+            color: var(--prompt-green);
+        }
+
+        .save-btn {
+            background: var(--success-green);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .save-btn:hover {
+            background: #56d364;
+            transform: translateY(-2px);
+        }
+
+        .save-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Form Styles */
+        .form-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-section h3 {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-highlight);
+            font-size: 1rem;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--prompt-green);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            background: var(--bg-terminal);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-light);
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Quill Editor */
+        .ql-container {
+            background: var(--bg-terminal) !important;
+            border-color: var(--border-color) !important;
+            border-radius: 0 0 6px 6px !important;
+        }
+
+        .ql-toolbar {
+            background: var(--bg-secondary) !important;
+            border-color: var(--border-color) !important;
+            border-radius: 6px 6px 0 0 !important;
+        }
+
+        .ql-editor {
+            color: var(--accent-light) !important;
+            font-family: 'Inter', sans-serif !important;
+            min-height: 150px;
+        }
+
+        .ql-editor.ql-blank::before {
+            color: var(--accent-gray) !important;
+        }
+
+        /* Tags Input */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px;
+            background: var(--bg-terminal);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            min-height: 48px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            color: var(--accent-light);
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            color: var(--accent-gray);
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .tag-remove:hover {
+            color: var(--error-red);
+        }
+
+        .tag-input {
+            border: none;
+            background: transparent;
+            color: var(--accent-light);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            outline: none;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        /* Paragraphs Editor */
+        .paragraph-item {
+            position: relative;
+            margin-bottom: 16px;
+            padding: 16px;
+            background: var(--bg-terminal);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        .paragraph-remove {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: transparent;
+            border: none;
+            color: var(--accent-gray);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .paragraph-remove:hover {
+            color: var(--error-red);
+        }
+
+        .add-btn {
+            background: transparent;
+            border: 1px dashed var(--border-color);
+            color: var(--accent-gray);
+            border-radius: 6px;
+            padding: 12px;
+            width: 100%;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .add-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        /* Experience/Project Cards */
+        .card-item {
+            background: var(--bg-terminal);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-highlight);
+            font-size: 0.9rem;
+        }
+
+        .card-remove {
+            background: transparent;
+            border: none;
+            color: var(--accent-gray);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .card-remove:hover {
+            color: var(--error-red);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: rgba(63, 185, 80, 0.9);
+            color: var(--bg-primary);
+        }
+
+        .toast.error {
+            background: rgba(248, 81, 73, 0.9);
+            color: white;
+        }
+
+        /* Media Grid */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .media-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .media-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-item-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .media-item:hover .media-item-overlay {
+            opacity: 1;
+        }
+
+        .media-delete {
+            background: var(--error-red);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .upload-area p {
+            color: var(--accent-gray);
+            margin-top: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 100;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            color: var(--accent-gray);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>$rangga_cms</h2>
+                <p>Content Management System</p>
+            </div>
+            <nav class="nav-section">
+                <div class="nav-section-title">Content</div>
+                <a class="nav-item active" data-section="hero">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>
+                    Hero Section
+                </a>
+                <a class="nav-item" data-section="skills">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path></svg>
+                    Skills
+                </a>
+                <a class="nav-item" data-section="experience">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3"></path></svg>
+                    Experience
+                </a>
+                <a class="nav-item" data-section="projects">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    Projects
+                </a>
+                <a class="nav-item" data-section="contact">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path></svg>
+                    Contact
+                </a>
+                <a class="nav-item" data-section="settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+                    Settings
+                </a>
+            </nav>
+            <nav class="nav-section">
+                <div class="nav-section-title">Media</div>
+                <a class="nav-item" data-section="media">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+                    Media Library
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h1 id="sectionTitle">Hero Section</h1>
+                <button class="save-btn" id="saveBtn">Save Changes</button>
+            </div>
+
+            <div id="contentArea">
+                <div class="loading">Loading content...</div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.js"></script>
+    <script>
+        let currentSection = 'hero';
+        let content = {};
+        let editors = {};
+
+        // Check auth on load
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/auth/check');
+                const data = await res.json();
+                if (!data.loggedIn) {
+                    window.location.href = '/admin';
+                }
+            } catch (err) {
+                window.location.href = '/admin';
+            }
+        }
+
+        // Load content
+        async function loadContent() {
+            try {
+                const res = await fetch('/api/content');
+                content = await res.json();
+                renderSection(currentSection);
+            } catch (err) {
+                showToast('Failed to load content', 'error');
+            }
+        }
+
+        // Render section
+        function renderSection(section) {
+            currentSection = section;
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.section === section);
+            });
+
+            const titles = {
+                hero: 'Hero Section',
+                skills: 'Skills',
+                experience: 'Work Experience',
+                projects: 'Projects',
+                contact: 'Contact Info',
+                settings: 'Site Settings',
+                media: 'Media Library'
+            };
+            document.getElementById('sectionTitle').textContent = titles[section] || section;
+
+            const area = document.getElementById('contentArea');
+            
+            // Destroy existing editors
+            Object.values(editors).forEach(editor => {
+                if (editor && editor.container) editor.container.remove();
+            });
+            editors = {};
+
+            switch(section) {
+                case 'hero': renderHero(area); break;
+                case 'skills': renderSkills(area); break;
+                case 'experience': renderExperience(area); break;
+                case 'projects': renderProjects(area); break;
+                case 'contact': renderContact(area); break;
+                case 'settings': renderSettings(area); break;
+                case 'media': renderMedia(area); break;
+            }
+        }
+
+        function renderHero(area) {
+            const hero = content.hero || {};
+            area.innerHTML = `
+                <div class="form-section">
+                    <h3>Terminal Content</h3>
+                    <div class="form-group">
+                        <label class="form-label">Typing Text</label>
+                        <input type="text" class="form-input" id="hero_typing" value="${escapeHtml(hero.typing_text || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Subtitle</label>
+                        <input type="text" class="form-input" id="hero_subtitle" value="${escapeHtml(hero.subtitle || '')}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Services</label>
+                        <input type="text" class="form-input" id="hero_services" value="${escapeHtml(hero.services || '')}">
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>About Paragraphs</h3>
+                    <div id="paragraphs">
+                        ${(hero.about_paragraphs || []).map((p, i) => `
+                            <div class="paragraph-item">
+                                <button class="paragraph-remove" onclick="removeParagraph(this)">×</button>
+                                <div class="editor-container" data-index="${i}"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="add-btn" onclick="addParagraph()">+ Add Paragraph</button>
+                </div>
+            `;
+
+            // Initialize Quill editors for paragraphs
+            (hero.about_paragraphs || []).forEach((p, i) => {
+                const container = area.querySelector(`[data-index="${i}"]`);
+                if (container) {
+                    editors[`paragraph_${i}`] = new Quill(container, {
+                        theme: 'snow',
+                        placeholder: 'Enter paragraph text...'
+                    });
+                    editors[`paragraph_${i}`].root.innerHTML = p;
+                }
+            });
+        }
+
+        function renderSkills(area) {
+            const skills = content.skills || [];
+            area.innerHTML = `
+                <div class="form-section">
+                    <h3>Skills</h3>
+                    <div id="skills_list">
+                        ${skills.map((s, i) => `
+                            <div class="card-item" data-index="${i}">
+                                <div class="card-header">
+                                    <span class="card-title">Skill #${i + 1}</span>
+                                    <button class="card-remove" onclick="removeSkill(this)">×</button>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Skill Name</label>
+                                    <input type="text" class="form-input skill-name" value="${escapeHtml(s.name)}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Level</label>
+                                    <select class="form-input skill-level">
+                                        <option value="Expert" ${s.level === 'Expert' ? 'selected' : ''}>Expert</option>
+                                        <option value="Advanced" ${s.level === 'Advanced' ? 'selected' : ''}>Advanced</option>
+                                        <option value="Intermediate" ${s.level === 'Intermediate' ? 'selected' : ''}>Intermediate</option>
+                                        <option value="Beginner" ${s.level === 'Beginner' ? 'selected' : ''}>Beginner</option>
+                                    </select>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="add-btn" onclick="addSkill()">+ Add Skill</button>
+                </div>
+            `;
+        }
+
+        function renderExperience(area) {
+            const exp = content.experience || [];
+            area.innerHTML = `
+                <div class="form-section">
+                    <h3>Work Experience</h3>
+                    <div id="experience_list">
+                        ${exp.map((e, i) => `
+                            <div class="card-item" data-index="${i}">
+                                <div class="card-header">
+                                    <span class="card-title">${escapeHtml(e.role)} - ${escapeHtml(e.company)}</span>
+                                    <button class="card-remove" onclick="removeExperience(this)">×</button>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Date Range</label>
+                                    <input type="text" class="form-input exp-date" value="${escapeHtml(e.date)}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Role</label>
+                                    <input type="text" class="form-input exp-role" value="${escapeHtml(e.role)}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Company</label>
+                                    <input type="text" class="form-input exp-company" value="${escapeHtml(e.company)}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Description</label>
+                                    <div class="editor-container" data-exp-index="${i}"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tech Tags (press Enter to add)</label>
+                                    <div class="tags-container" data-tags-index="${i}">
+                                        ${(e.tags || []).map(t => `<span class="tag">${escapeHtml(t)}<span class="tag-remove" onclick="this.parentElement.remove()">×</span></span>`).join('')}
+                                        <input type="text" class="tag-input" placeholder="Add tag...">
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="add-btn" onclick="addExperience()">+ Add Experience</button>
+                </div>
+            `;
+
+            exp.forEach((e, i) => {
+                const container = area.querySelector(`[data-exp-index="${i}"]`);
+                if (container) {
+                    editors[`exp_${i}`] = new Quill(container, { theme: 'snow' });
+                    editors[`exp_${i}`].root.innerHTML = e.description;
+                }
+            });
+
+            // Tag input handlers
+            area.querySelectorAll('.tag-input').forEach(input => {
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && this.value.trim()) {
+                        e.preventDefault();
+                        const tag = document.createElement('span');
+                        tag.className = 'tag';
+                        tag.innerHTML = `${escapeHtml(this.value.trim())}<span class="tag-remove" onclick="this.parentElement.remove()">×</span>`;
+                        this.parentElement.insertBefore(tag, this);
+                        this.value = '';
+                    }
+                });
+            });
+        }
+
+        function renderProjects(area) {
+            const projects = content.projects || [];
+            area.innerHTML = `
+                <div class="form-section">
+                    <h3>Projects</h3>
+                    <div id="projects_list">
+                        ${projects.map((p, i) => `
+                            <div class="card-item" data-index="${i}">
+                                <div class="card-header">
+                                    <span class="card-title">${escapeHtml(p.name)}</span>
+                                    <button class="card-remove" onclick="removeProject(this)">×</button>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Project ID</label>
+                                    <input type="text" class="form-input proj-id" value="${escapeHtml(p.id)}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Project Name</label>
+                                    <input type="text" class="form-input proj-name" value="${escapeHtml(p.name)}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Image URL</label>
+                                    <input type="text" class="form-input proj-image" value="${escapeHtml(p.image)}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Short Description</label>
+                                    <input type="text" class="form-input proj-desc" value="${escapeHtml(p.description)}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Modal Content (HTML)</label>
+                                    <div class="editor-container" data-proj-index="${i}"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Modal Image URL</label>
+                                    <input type="text" class="form-input proj-modal-image" value="${escapeHtml(p.modal_content?.image || p.image)}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tech Tags (press Enter to add)</label>
+                                    <div class="tags-container" data-proj-tags="${i}">
+                                        ${(p.tags || []).map(t => `<span class="tag">${escapeHtml(t)}<span class="tag-remove" onclick="this.parentElement.remove()">×</span></span>`).join('')}
+                                        <input type="text" class="tag-input" placeholder="Add tag...">
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="add-btn" onclick="addProject()">+ Add Project</button>
+                </div>
+            `;
+
+            projects.forEach((p, i) => {
+                const container = area.querySelector(`[data-proj-index="${i}"]`);
+                if (container) {
+                    editors[`proj_${i}`] = new Quill(container, { theme: 'snow' });
+                    editors[`proj_${i}`].root.innerHTML = p.modal_content?.content || p.description;
+                }
+            });
+
+            area.querySelectorAll('.tag-input').forEach(input => {
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && this.value.trim()) {
+                        e.preventDefault();
+                        const tag = document.createElement('span');
+                        tag.className = 'tag';
+                        tag.innerHTML = `${escapeHtml(this.value.trim())}<span class="tag-remove" onclick="this.parentElement.remove()">×</span>`;
+                        this.parentElement.insertBefore(tag, this);
+                        this.value = '';
+                    }
+                });
+            });
+        }
+
+        function renderContact(area) {
+            const contact = content.contact || {};
+            area.innerHTML = `
+                <div class="form-section">
+                    <h3>Contact Information</h3>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="text" class="form-input" id="contact_email" value="${escapeHtml(contact.email)}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">LinkedIn</label>
+                        <input type="text" class="form-input" id="contact_linkedin" value="${escapeHtml(contact.linkedin)}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">GitHub</label>
+                        <input type="text" class="form-input" id="contact_github" value="${escapeHtml(contact.github)}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-input" id="contact_location" value="${escapeHtml(contact.location)}">
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSettings(area) {
+            const settings = content.settings || {};
+            area.innerHTML = `
+                <div class="form-section">
+                    <h3>Site Settings</h3>
+                    <div class="form-group">
+                        <label class="form-label">Site Title</label>
+                        <input type="text" class="form-input" id="settings_title" value="${escapeHtml(settings.site_title)}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Profile Image URL</label>
+                        <input type="text" class="form-input" id="settings_profile_image" value="${escapeHtml(settings.profile_image)}">
+                    </div>
+                </div>
+            `;
+        }
+
+        async function renderMedia(area) {
+            area.innerHTML = `
+                <div class="form-section">
+                    <h3>Media Library</h3>
+                    <div class="upload-area" id="uploadArea">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-gray);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <p>Click or drag files to upload</p>
+                        <input type="file" id="fileInput" accept="image/*" style="display:none">
+                    </div>
+                    <div class="media-grid" id="mediaGrid" style="margin-top: 24px;"></div>
+                </div>
+            `;
+
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--accent-blue)'; });
+            uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = 'var(--border-color)'; });
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--border-color)';
+                if (e.dataTransfer.files.length) uploadFile(e.dataTransfer.files[0]);
+            });
+            fileInput.addEventListener('change', () => { if (fileInput.files.length) uploadFile(fileInput.files[0]); });
+
+            loadMediaGrid();
+        }
+
+        async function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch('/api/media/upload', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast('File uploaded successfully', 'success');
+                    loadMediaGrid();
+                } else {
+                    showToast(data.error || 'Upload failed', 'error');
+                }
+            } catch (err) {
+                showToast('Upload failed', 'error');
+            }
+        }
+
+        async function loadMediaGrid() {
+            try {
+                const res = await fetch('/api/media');
+                const files = await res.json();
+                const grid = document.getElementById('mediaGrid');
+                if (!grid) return;
+
+                grid.innerHTML = files.map(f => `
+                    <div class="media-item">
+                        <img src="${f.url}" alt="${f.filename}">
+                        <div class="media-item-overlay">
+                            <button class="media-delete" onclick="deleteMedia('${f.filename}')">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                showToast('Failed to load media', 'error');
+            }
+        }
+
+        async function deleteMedia(filename) {
+            if (!confirm('Delete this file?')) return;
+            try {
+                const res = await fetch(`/api/media/${filename}`, { method: 'DELETE' });
+                if (res.ok) {
+                    showToast('File deleted', 'success');
+                    loadMediaGrid();
+                }
+            } catch (err) {
+                showToast('Delete failed', 'error');
+            }
+        }
+
+        // Save content
+        async function saveContent() {
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+
+            try {
+                switch(currentSection) {
+                    case 'hero': saveHero(); break;
+                    case 'skills': saveSkills(); break;
+                    case 'experience': saveExperience(); break;
+                    case 'projects': saveProjects(); break;
+                    case 'contact': saveContact(); break;
+                    case 'settings': saveSettings(); break;
+                }
+
+                const res = await fetch(`/api/content/${currentSection}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(content[currentSection])
+                });
+
+                if (res.ok) {
+                    showToast('Content saved successfully', 'success');
+                } else {
+                    showToast('Failed to save content', 'error');
+                }
+            } catch (err) {
+                showToast('Save failed', 'error');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Changes';
+            }
+        }
+
+        function saveHero() {
+            content.hero = {
+                typing_text: document.getElementById('hero_typing').value,
+                subtitle: document.getElementById('hero_subtitle').value,
+                services: document.getElementById('hero_services').value,
+                about_paragraphs: []
+            };
+            Object.keys(editors).forEach(key => {
+                if (key.startsWith('paragraph_') && editors[key]) {
+                    content.hero.about_paragraphs.push(editors[key].root.innerHTML);
+                }
+            });
+        }
+
+        function saveSkills() {
+            content.skills = [];
+            document.querySelectorAll('#skills_list .card-item').forEach(item => {
+                content.skills.push({
+                    name: item.querySelector('.skill-name').value,
+                    level: item.querySelector('.skill-level').value
+                });
+            });
+        }
+
+        function saveExperience() {
+            content.experience = [];
+            document.querySelectorAll('#experience_list .card-item').forEach(item => {
+                const tags = [];
+                item.querySelectorAll('.tag').forEach(t => {
+                    tags.push(t.childNodes[0].textContent.trim());
+                });
+                const idx = item.dataset.index;
+                content.experience.push({
+                    date: item.querySelector('.exp-date').value,
+                    role: item.querySelector('.exp-role').value,
+                    company: item.querySelector('.exp-company').value,
+                    description: editors[`exp_${idx}`]?.root.innerHTML || '',
+                    tags: tags
+                });
+            });
+        }
+
+        function saveProjects() {
+            content.projects = [];
+            document.querySelectorAll('#projects_list .card-item').forEach(item => {
+                const tags = [];
+                item.querySelectorAll('.tag').forEach(t => {
+                    tags.push(t.childNodes[0].textContent.trim());
+                });
+                const idx = item.dataset.index;
+                content.projects.push({
+                    id: item.querySelector('.proj-id').value,
+                    name: item.querySelector('.proj-name').value,
+                    image: item.querySelector('.proj-image').value,
+                    description: item.querySelector('.proj-desc').value,
+                    tags: tags,
+                    modal_content: {
+                        title: item.querySelector('.proj-name').value,
+                        image: item.querySelector('.proj-modal-image').value,
+                        content: editors[`proj_${idx}`]?.root.innerHTML || '',
+                        tags: tags
+                    }
+                });
+            });
+        }
+
+        function saveContact() {
+            content.contact = {
+                email: document.getElementById('contact_email').value,
+                linkedin: document.getElementById('contact_linkedin').value,
+                github: document.getElementById('contact_github').value,
+                location: document.getElementById('contact_location').value
+            };
+        }
+
+        function saveSettings() {
+            content.settings = {
+                site_title: document.getElementById('settings_title').value,
+                profile_image: document.getElementById('settings_profile_image').value
+            };
+        }
+
+        // Helper functions
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = type === 'success' ? '[SUCCESS] ' + message : '[ERROR] ' + message;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Dynamic add/remove functions
+        function removeParagraph(btn) {
+            btn.parentElement.remove();
+        }
+
+        function addParagraph() {
+            const container = document.getElementById('paragraphs');
+            const index = container.children.length;
+            const div = document.createElement('div');
+            div.className = 'paragraph-item';
+            div.innerHTML = `
+                <button class="paragraph-remove" onclick="removeParagraph(this)">×</button>
+                <div class="editor-container" data-index="${index}"></div>
+            `;
+            container.appendChild(div);
+            editors[`paragraph_${index}`] = new Quill(div.querySelector('.editor-container'), { theme: 'snow' });
+        }
+
+        function removeSkill(btn) { btn.closest('.card-item').remove(); }
+        function removeExperience(btn) { btn.closest('.card-item').remove(); }
+        function removeProject(btn) { btn.closest('.card-item').remove(); }
+
+        function addSkill() {
+            const list = document.getElementById('skills_list');
+            const index = list.children.length;
+            const div = document.createElement('div');
+            div.className = 'card-item';
+            div.dataset.index = index;
+            div.innerHTML = `
+                <div class="card-header">
+                    <span class="card-title">Skill #${index + 1}</span>
+                    <button class="card-remove" onclick="removeSkill(this)">×</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Skill Name</label>
+                    <input type="text" class="form-input skill-name" placeholder="e.g., Linux Administration">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Level</label>
+                    <select class="form-input skill-level">
+                        <option value="Expert">Expert</option>
+                        <option value="Advanced">Advanced</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Beginner">Beginner</option>
+                    </select>
+                </div>
+            `;
+            list.appendChild(div);
+        }
+
+        function addExperience() {
+            const list = document.getElementById('experience_list');
+            const index = list.children.length;
+            const div = document.createElement('div');
+            div.className = 'card-item';
+            div.dataset.index = index;
+            div.innerHTML = `
+                <div class="card-header">
+                    <span class="card-title">New Experience</span>
+                    <button class="card-remove" onclick="removeExperience(this)">×</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Date Range</label>
+                    <input type="text" class="form-input exp-date" placeholder="e.g., Jan 2024 - Present">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <input type="text" class="form-input exp-role" placeholder="e.g., DevOps Engineer">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Company</label>
+                    <input type="text" class="form-input exp-company" placeholder="e.g., Company Name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <div class="editor-container" data-exp-index="${index}"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tech Tags (press Enter to add)</label>
+                    <div class="tags-container" data-tags-index="${index}">
+                        <input type="text" class="tag-input" placeholder="Add tag...">
+                    </div>
+                </div>
+            `;
+            list.appendChild(div);
+            editors[`exp_${index}`] = new Quill(div.querySelector('.editor-container'), { theme: 'snow' });
+            div.querySelector('.tag-input').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && this.value.trim()) {
+                    e.preventDefault();
+                    const tag = document.createElement('span');
+                    tag.className = 'tag';
+                    tag.innerHTML = `${this.value.trim()}<span class="tag-remove" onclick="this.parentElement.remove()">×</span>`;
+                    this.parentElement.insertBefore(tag, this);
+                    this.value = '';
+                }
+            });
+        }
+
+        function addProject() {
+            const list = document.getElementById('projects_list');
+            const index = list.children.length;
+            const div = document.createElement('div');
+            div.className = 'card-item';
+            div.dataset.index = index;
+            div.innerHTML = `
+                <div class="card-header">
+                    <span class="card-title">New Project</span>
+                    <button class="card-remove" onclick="removeProject(this)">×</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Project ID</label>
+                    <input type="text" class="form-input proj-id" placeholder="e.g., my-project">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Project Name</label>
+                    <input type="text" class="form-input proj-name" placeholder="e.g., My Project">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Image URL</label>
+                    <input type="text" class="form-input proj-image" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Short Description</label>
+                    <input type="text" class="form-input proj-desc" placeholder="Brief description...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Modal Content (HTML)</label>
+                    <div class="editor-container" data-proj-index="${index}"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Modal Image URL</label>
+                    <input type="text" class="form-input proj-modal-image" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tech Tags (press Enter to add)</label>
+                    <div class="tags-container" data-proj-tags="${index}">
+                        <input type="text" class="tag-input" placeholder="Add tag...">
+                    </div>
+                </div>
+            `;
+            list.appendChild(div);
+            editors[`proj_${index}`] = new Quill(div.querySelector('.editor-container'), { theme: 'snow' });
+            div.querySelector('.tag-input').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && this.value.trim()) {
+                    e.preventDefault();
+                    const tag = document.createElement('span');
+                    tag.className = 'tag';
+                    tag.innerHTML = `${this.value.trim()}<span class="tag-remove" onclick="this.parentElement.remove()">×</span>`;
+                    this.parentElement.insertBefore(tag, this);
+                    this.value = '';
+                }
+            });
+        }
+
+        // Event listeners
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => renderSection(item.dataset.section));
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', saveContent);
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/admin';
+        });
+
+        // Initialize
+        checkAuth().then(() => loadContent());
+    </script>
+</body>
+</html>
